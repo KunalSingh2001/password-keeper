@@ -1,25 +1,51 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-
+import Add from './components/password/Add';
+import List from './components/password/List'
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [records, setRecords] = useState([]);
+	const [currentRecord, setCurrentRecord] = useState(null);
+	useEffect(() => {
+		const data = JSON.parse(localStorage.getItem("records")) || [];
+		setRecords(data);
+	}, [])
+
+	const addRecord = (title, password) => {
+		const newRecord = {
+			id: Math.random().toString(),
+			title,
+			password,
+		};
+		setRecords([...records, newRecord]);
+		localStorage.setItem("records", JSON.stringify(records));
+	};
+
+	const editRecord = (id) => {
+		const recordToEdit = records.find((item) => item.id === id);
+		if (recordToEdit) {
+			setCurrentRecord(recordToEdit);
+		}
+	}
+
+	const updateRecord = (id, title, password) => {
+		const newRecord = {
+			id: Math.random().toString(),
+			title,
+			password,
+		};
+		setRecords([...records, newRecord]);
+		localStorage.setItem("records", JSON.stringify(records));
+	};
+
+	const deleteRecord = (id) => {
+
+	}
+	return (
+		<>
+			<Add onAddRecord={addRecord} currentRecord = {currentRecord}/>
+			<List records={records} onEdit={editRecord} onDelete={deleteRecord}/>
+		</>
+	);
 }
 
 export default App;
