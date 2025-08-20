@@ -1,14 +1,18 @@
 
 
 function List(props) {
+    function searchReacord(event) {
+        props.onSearch(event.target.value)
+    }
+
     return (
         <>
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <div>
-                    <input type="text" className="form-control" placeholder="Search records..."/>
+                    <input type="text" className="form-control" onChange={searchReacord} placeholder="Search records..."/>
                 </div>
                 <div>
-                    <span className="fw-bold">Total Records: </span><span id="totalRecords">3</span>
+                    <span className="fw-bold">Total Records: </span><span id="totalRecords">{props.records.length}</span>
                 </div>
             </div>
 

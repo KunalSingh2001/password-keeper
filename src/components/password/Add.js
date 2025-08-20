@@ -28,12 +28,19 @@ function Add(props) {
 
     function submitForm (event) {
         event.preventDefault();
-        if (title != ""&& password.length ==6 ) {
-            props.onAddRecord(title, password);
+        if (title != ""&& password.length == 6 ) {
+            if (editId) {
+                props.onEditRecord(editId, title, password);
+                setEditId("");
+            }else {
+                props.onAddRecord(title, password);
+            }
             setTitle("");
             setPassword("");
         }
     }
+
+    
 
     return (
         <>

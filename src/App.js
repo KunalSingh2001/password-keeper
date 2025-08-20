@@ -16,8 +16,9 @@ function App() {
 			title,
 			password,
 		};
-		setRecords([...records, newRecord]);
-		localStorage.setItem("records", JSON.stringify(records));
+		let updatedArray = [...records, newRecord];
+		setRecords(updatedArray);
+		localStorage.setItem("records", JSON.stringify(updatedArray));
 	};
 
 	const editRecord = (id) => {
@@ -28,22 +29,40 @@ function App() {
 	}
 
 	const updateRecord = (id, title, password) => {
-		const newRecord = {
-			id: Math.random().toString(),
-			title,
-			password,
-		};
-		setRecords([...records, newRecord]);
-		localStorage.setItem("records", JSON.stringify(records));
+		const records = JSON.parse(localStorage.getItem("records"));
+		const updatedArray = records.map((item) => {
+			if (item.id == id) {
+				return {
+					...item,
+					title,
+					password
+				}
+			};
+			return item;
+		});
+		localStorage.setItem('records', JSON.stringify(updatedArray));
+		setRecords(updatedArray);
 	};
 
 	const deleteRecord = (id) => {
-
+		const records = JSON.parse(localStorage.getItem("records"));
+		const filteredRecords = records.filter((record) => record.id !== id);
+		localStorage.setItem('records', JSON.stringify(filteredRecords));
+		setRecords(filteredRecords);
 	}
+
+
+	const searchData = (search) => {
+		const records = JSON.parse(localStorage.getItem("records"));
+		const filteredRecords = records.filter((record) =>
+			record.title.toLowerCase().includes(search.toLowerCase())
+		);
+		setRecords(filteredRecords);
+	} 
 	return (
 		<>
-			<Add onAddRecord={addRecord} currentRecord = {currentRecord}/>
-			<List records={records} onEdit={editRecord} onDelete={deleteRecord}/>
+			<Add onAddRecord={addRecord} onEditRecord={updateRecord} currentRecord = {currentRecord}/>
+			<List records={records} onEdit={editRecord} onDelete={deleteRecord} onSearch={searchData}/>
 		</>
 	);
 }
